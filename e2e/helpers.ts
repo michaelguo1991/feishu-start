@@ -73,3 +73,10 @@ export function mainContent(page: Page) {
 export function mobileBottomNav(page: Page) {
   return page.locator('nav.fixed.inset-x-0')
 }
+
+export async function hideDevtoolsOverlay(page: Page) {
+  await page.addStyleTag({
+    content:
+      'button[aria-label="Open TanStack Devtools"], [data-testid="tanstack-devtools"] { display: none !important; pointer-events: none !important; }',
+  })
+}

@@ -68,6 +68,7 @@ async function insertProfileVersion(
       bio: data.bio ?? '',
       createdAt,
       createdBy,
+      updatedBy: createdBy,
     })
     .returning()
 

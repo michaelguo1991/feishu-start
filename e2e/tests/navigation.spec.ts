@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-import { loginAsTestUser, mobileBottomNav } from '../helpers'
+import { hideDevtoolsOverlay, loginAsTestUser, mobileBottomNav } from '../helpers'
 
 test.describe('导航', () => {
   test.beforeEach(async ({ page }) => {
@@ -29,6 +29,7 @@ test.describe('导航', () => {
 
   test('移动端底部导航可访问各页面', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
+    await hideDevtoolsOverlay(page)
 
     const nav = mobileBottomNav(page)
     await nav.getByRole('link', { name: '个人', exact: true }).click()

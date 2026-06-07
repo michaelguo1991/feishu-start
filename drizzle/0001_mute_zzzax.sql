@@ -1,0 +1,1 @@
+ALTER TABLE `profile_versions` ADD `updated_by` text DEFAULT 'michael' NOT NULL;

@@ -12,6 +12,7 @@ export const profileVersions = sqliteTable(
     bio: text('bio').notNull().default(''),
     createdAt: text('created_at').notNull(),
     createdBy: text('created_by').notNull(),
+    updatedBy: text('updated_by').notNull().default('michael'),
   },
   (table) => [
     uniqueIndex('profile_versions_user_version_idx').on(

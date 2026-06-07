@@ -21,6 +21,7 @@ export default defineConfig({
     launchOptions: {
       channel: 'chrome',
     },
+    actionTimeout: 15_000,
   },
   projects: [
     {
