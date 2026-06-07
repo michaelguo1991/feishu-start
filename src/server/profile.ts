@@ -39,7 +39,7 @@ function toProfileDto(row: typeof profileVersions.$inferSelect) {
 }
 
 async function nextVersion(openId: string) {
-  const db = getDb()
+  const db = await getDb()
   const latest = await db.query.profileVersions.findFirst({
     where: eq(profileVersions.feishuOpenId, openId),
     orderBy: desc(profileVersions.version),
@@ -53,7 +53,7 @@ async function insertProfileVersion(
   createdBy: string,
   data: z.infer<typeof profileInputSchema>,
 ) {
-  const db = getDb()
+  const db = await getDb()
   const version = await nextVersion(openId)
   const createdAt = new Date().toISOString()
 
@@ -81,7 +81,7 @@ async function insertProfileVersion(
 
 export const getLatestProfile = createServerFn({ method: 'GET' }).handler(async () => {
   const { openId } = requireOpenId()
-  const db = getDb()
+  const db = await getDb()
 
   const row = await db.query.profileVersions.findFirst({
     where: eq(profileVersions.feishuOpenId, openId),
@@ -93,7 +93,7 @@ export const getLatestProfile = createServerFn({ method: 'GET' }).handler(async 
 
 export const listProfileVersions = createServerFn({ method: 'GET' }).handler(async () => {
   const { openId } = requireOpenId()
-  const db = getDb()
+  const db = await getDb()
 
   const rows = await db.query.profileVersions.findMany({
     where: eq(profileVersions.feishuOpenId, openId),
@@ -113,7 +113,7 @@ export const getProfileVersion = createServerFn({ method: 'GET' })
   .validator(versionSchema)
   .handler(async ({ data }) => {
     const { openId } = requireOpenId()
-    const db = getDb()
+    const db = await getDb()
 
     const row = await db.query.profileVersions.findFirst({
       where: and(
@@ -140,7 +140,7 @@ export const restoreProfileVersion = createServerFn({ method: 'POST' })
   .validator(versionSchema)
   .handler(async ({ data }) => {
     const { openId, createdBy } = requireOpenId()
-    const db = getDb()
+    const db = await getDb()
 
     const row = await db.query.profileVersions.findFirst({
       where: and(

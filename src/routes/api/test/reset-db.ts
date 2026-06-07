@@ -10,7 +10,7 @@ export const Route = createFileRoute('/api/test/reset-db')({
       POST: async () => {
         if (!isE2eTestMode()) return e2eNotFound()
 
-        const db = getDb()
+        const db = await getDb()
         await db.delete(profileVersions)
 
         return new Response(JSON.stringify({ ok: true }), {

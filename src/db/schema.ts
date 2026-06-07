@@ -1,26 +1,15 @@
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
+import { env } from '#/lib/env'
 
-export const profileVersions = sqliteTable(
-  'profile_versions',
-  {
-    id: integer('id').primaryKey({ autoIncrement: true }),
-    feishuOpenId: text('feishu_open_id').notNull(),
-    version: integer('version').notNull(),
-    displayName: text('display_name').notNull(),
-    phone: text('phone').notNull().default(''),
-    department: text('department').notNull().default(''),
-    bio: text('bio').notNull().default(''),
-    createdAt: text('created_at').notNull(),
-    createdBy: text('created_by').notNull(),
-    updatedBy: text('updated_by').notNull().default('michael'),
-  },
-  (table) => [
-    uniqueIndex('profile_versions_user_version_idx').on(
-      table.feishuOpenId,
-      table.version,
-    ),
-  ],
-)
+import * as pgSchema from './schema.pg'
+import * as sqliteSchema from './schema.sqlite'
 
-export type ProfileVersion = typeof profileVersions.$inferSelect
-export type NewProfileVersion = typeof profileVersions.$inferInsert
+export const profileVersions = env.usePostgres
+  ? pgSchema.profileVersions
+  : sqliteSchema.profileVersions
+
+export type ProfileVersion =
+  | pgSchema.ProfileVersion
+  | sqliteSchema.ProfileVersion
+export type NewProfileVersion =
+  | pgSchema.NewProfileVersion
+  | sqliteSchema.NewProfileVersion

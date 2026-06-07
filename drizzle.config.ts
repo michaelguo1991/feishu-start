@@ -1,10 +1,10 @@
 import { defineConfig } from 'drizzle-kit'
 
 export default defineConfig({
-  schema: './src/db/schema.ts',
+  schema: './src/db/schema.pg.ts',
   out: './drizzle',
-  dialect: 'sqlite',
+  dialect: 'postgresql',
   dbCredentials: {
-    url: process.env.DATABASE_PATH ?? '.data/db.sqlite',
+    url: process.env.DATABASE_URL ?? 'postgresql://localhost:5432/feishu_start',
   },
 })

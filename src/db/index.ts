@@ -1,16 +1,18 @@
 import { mkdirSync } from 'node:fs'
 import { dirname, resolve } from 'node:path'
 
-import Database from 'better-sqlite3'
-import { drizzle } from 'drizzle-orm/better-sqlite3'
-
 import { env } from '#/lib/env'
 
-import * as schema from './schema'
 import { runMigrations } from './migrate'
+import * as schema from './schema'
 
-let sqlite: Database.Database | null = null
-let db: ReturnType<typeof drizzle<typeof schema>> | null = null
+type AppDb =
+  | import('drizzle-orm/better-sqlite3').BetterSQLite3Database<typeof schema>
+  | import('drizzle-orm/node-postgres').NodePgDatabase<typeof schema>
+
+let sqlite: import('better-sqlite3').Database | null = null
+let pool: import('pg').Pool | null = null
+let db: AppDb | null = null
 
 function resolveDatabasePath() {
   const configured = env.databasePath
@@ -18,8 +20,19 @@ function resolveDatabasePath() {
   return resolve(process.cwd(), configured)
 }
 
-export function getDb() {
-  if (db) return db
+async function createPostgresDb() {
+  const { Pool } = await import('pg')
+  const { drizzle } = await import('drizzle-orm/node-postgres')
+
+  pool = new Pool({ connectionString: env.databaseUrl })
+  const connection = drizzle(pool, { schema })
+  await runMigrations(connection)
+  return connection
+}
+
+async function createSqliteDb() {
+  const Database = (await import('better-sqlite3')).default
+  const { drizzle } = await import('drizzle-orm/better-sqlite3')
 
   const databasePath = resolveDatabasePath()
   mkdirSync(dirname(databasePath), { recursive: true })
@@ -28,8 +41,14 @@ export function getDb() {
   sqlite.pragma('journal_mode = WAL')
   sqlite.pragma('foreign_keys = ON')
 
-  db = drizzle(sqlite, { schema })
-  runMigrations(db)
+  const connection = drizzle(sqlite, { schema })
+  await runMigrations(connection)
+  return connection
+}
 
+export async function getDb() {
+  if (db) return db
+
+  db = env.usePostgres ? await createPostgresDb() : await createSqliteDb()
   return db
 }
