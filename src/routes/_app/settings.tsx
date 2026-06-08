@@ -63,7 +63,6 @@ function SettingsPage() {
 
       <section className="rounded-3xl border border-slate-800 bg-slate-900/40 p-6 text-xs text-slate-500">
         <p>部署路径：/feishu-app/</p>
-        <p className="mt-2">框架：TanStack Start + TanStack Router</p>
       </section>
     </div>
   )

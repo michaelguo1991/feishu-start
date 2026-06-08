@@ -55,10 +55,7 @@ function HomePage() {
   return (
     <div className="space-y-6">
       <header>
-        <p className="text-sm uppercase tracking-[0.2em] text-sky-400">
-          TanStack Start
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold md:text-3xl">飞书工作台</h1>
+        <h1 className="text-2xl font-semibold md:text-3xl">飞书工作台</h1>
         <p className="mt-2 max-w-2xl text-sm text-slate-400 md:text-base">
           飞书客户端内自动免登；外部浏览器走 OAuth 登录。
         </p>
