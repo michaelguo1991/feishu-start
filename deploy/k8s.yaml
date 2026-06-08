@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feishu-start
+  namespace: default
+  labels:
+    app: feishu-start
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: feishu-start
+  template:
+    metadata:
+      labels:
+        app: feishu-start
+    spec:
+      containers:
+        - name: feishu-start
+          image: registry.zhangjie.life/feishu/start:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: NODE_ENV
+              value: production
+            - name: PORT
+              value: "3000"
+            - name: APP_BASE_URL
+              value: https://zhangjie.life/feishu-app
+          envFrom:
+            - secretRef:
+                name: feishu-start-env
+                optional: true
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              memory: 512Mi
+          readinessProbe:
+            httpGet:
+              path: /feishu-app/
+              port: 3000
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /feishu-app/
+              port: 3000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: feishu-start
+  namespace: default
+spec:
+  selector:
+    app: feishu-start
+  ports:
+    - port: 80
+      targetPort: 3000
