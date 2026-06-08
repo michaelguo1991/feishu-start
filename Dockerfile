@@ -1,8 +1,10 @@
 FROM node:22-alpine AS build
 WORKDIR /app
-RUN apk add --no-cache python3 make g++
 COPY package.json package-lock.json ./
-RUN npm ci
+# Production uses PostgreSQL; skip better-sqlite3 to avoid native compile on Alpine.
+RUN npm pkg delete dependencies.better-sqlite3 \
+ && npm pkg delete devDependencies.@types/better-sqlite3 \
+ && npm install --no-audit --no-fund
 COPY . .
 RUN npm run build
 
