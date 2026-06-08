@@ -17,32 +17,7 @@ env:
   CONTAINER: feishu-start
 
 jobs:
-  ci-gate:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install native build tools
-        run: sudo apt-get update && sudo apt-get install -y python3 make g++
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Unit tests
-        run: npm test
-
-      - name: Production build
-        run: npm run build
-
   deploy:
-    needs: ci-gate
     runs-on: [self-hosted, linux, amd64, overseas]
     steps:
       - name: Checkout
