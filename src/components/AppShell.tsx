@@ -28,7 +28,7 @@ export function AppShell({
           <p className="text-xs uppercase tracking-[0.2em] text-sky-400">
             飞书工作台
           </p>
-          <h1 className="mt-2 text-lg font-semibold">张杰 · Demo</h1>
+          <h1 className="mt-2 text-lg font-semibold">小郭 · Demo</h1>
         </div>
         <nav className="flex flex-1 flex-col gap-1 p-3">
           {navItems.map(({ to, label, icon: Icon }) => {
