@@ -1,4 +1,11 @@
-import { integer, pgTable, serial, text, uniqueIndex } from 'drizzle-orm/pg-core'
+import {
+  index,
+  integer,
+  pgTable,
+  serial,
+  text,
+  uniqueIndex,
+} from 'drizzle-orm/pg-core'
 
 export const profileVersions = pgTable(
   'profile_versions',
@@ -24,3 +31,19 @@ export const profileVersions = pgTable(
 
 export type ProfileVersion = typeof profileVersions.$inferSelect
 export type NewProfileVersion = typeof profileVersions.$inferInsert
+
+export const notes = pgTable(
+  'notes',
+  {
+    id: serial('id').primaryKey(),
+    feishuOpenId: text('feishu_open_id').notNull(),
+    title: text('title').notNull(),
+    content: text('content').notNull().default(''),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [index('notes_open_id_idx').on(table.feishuOpenId)],
+)
+
+export type Note = typeof notes.$inferSelect
+export type NewNote = typeof notes.$inferInsert

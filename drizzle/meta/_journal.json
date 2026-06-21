@@ -8,6 +8,13 @@
       "when": 1780833536150,
       "tag": "0000_plain_marten_broadcloak",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782044173315,
+      "tag": "0001_wakeful_chronomancer",
+      "breakpoints": true
     }
   ]
 }

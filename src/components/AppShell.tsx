@@ -1,5 +1,5 @@
 import { Link, Outlet, useRouterState } from '@tanstack/react-router'
-import { Home, LayoutGrid, Settings, User } from 'lucide-react'
+import { Home, LayoutGrid, NotebookText, Settings, User } from 'lucide-react'
 import type { ReactNode } from 'react'
 
 import type { AuthState } from '#/server/auth'
@@ -7,6 +7,7 @@ import type { AuthState } from '#/server/auth'
 const navItems = [
   { to: '/', label: '首页', icon: Home },
   { to: '/profile', label: '个人', icon: User },
+  { to: '/notes', label: '笔记', icon: NotebookText },
   { to: '/apps', label: '应用', icon: LayoutGrid },
   { to: '/settings', label: '设置', icon: Settings },
 ] as const
@@ -83,7 +84,7 @@ export function AppShell({
 
       {/* Mobile bottom tab bar */}
       <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-slate-800 bg-slate-950/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
-        <div className="grid grid-cols-4">
+        <div className="grid grid-cols-5">
           {navItems.map(({ to, label, icon: Icon }) => {
             const active = isActive(pathname, to)
             return (

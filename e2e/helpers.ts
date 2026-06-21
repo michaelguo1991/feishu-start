@@ -9,6 +9,40 @@ export async function resetProfileData(request: APIRequestContext) {
   }
 }
 
+export async function resetNotesData(request: APIRequestContext) {
+  const response = await request.post('/api/test/reset-db')
+  if (!response.ok()) {
+    throw new Error(`Failed to reset e2e database: ${response.status()}`)
+  }
+}
+
+export async function fillNoteForm(
+  page: Page,
+  data: { title: string; content?: string },
+) {
+  const title = page.getByRole('textbox', { name: /标题/ })
+  await title.click()
+  await title.clear()
+  await title.pressSequentially(data.title, { delay: 20 })
+  await expect(title).toHaveValue(data.title)
+  if (data.content !== undefined) {
+    const content = page.getByRole('textbox', { name: /正文/ })
+    await content.click()
+    await content.fill(data.content)
+    await expect(content).toHaveValue(data.content)
+  }
+}
+
+export async function createNoteAndReturn(
+  page: Page,
+  data: { title: string; content?: string },
+) {
+  await page.goto('/notes/new')
+  await fillNoteForm(page, data)
+  await page.getByRole('button', { name: '保存' }).click()
+  await expect(page).toHaveURL(/\/notes\/?$/, { timeout: 15_000 })
+}
+
 export async function loginAsTestUser(page: Page, redirect = '/') {
   await page.goto(`/api/test/login?redirect=${encodeURIComponent(redirect)}`)
   await page.waitForURL((url) => url.pathname.startsWith('/feishu-app'))

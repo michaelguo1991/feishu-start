@@ -13,3 +13,8 @@ export type ProfileVersion =
 export type NewProfileVersion =
   | pgSchema.NewProfileVersion
   | sqliteSchema.NewProfileVersion
+
+export const notes = env.usePostgres ? pgSchema.notes : sqliteSchema.notes
+
+export type Note = pgSchema.Note | sqliteSchema.Note
+export type NewNote = pgSchema.NewNote | sqliteSchema.NewNote
