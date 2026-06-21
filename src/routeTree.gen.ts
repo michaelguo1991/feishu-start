@@ -13,17 +13,21 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as AppIndexRouteImport } from './routes/_app/index'
 import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
+import { Route as AppNotesRouteImport } from './routes/_app/notes'
 import { Route as AppAppsRouteImport } from './routes/_app/apps'
 import { Route as AppProfileIndexRouteImport } from './routes/_app/profile/index'
+import { Route as AppNotesIndexRouteImport } from './routes/_app/notes/index'
 import { Route as ApiTestResetDbRouteImport } from './routes/api/test/reset-db'
 import { Route as ApiTestLoginRouteImport } from './routes/api/test/login'
 import { Route as ApiAuthLogoutRouteImport } from './routes/api/auth/logout'
 import { Route as AppProfileEditRouteImport } from './routes/_app/profile/edit'
+import { Route as AppNotesNewRouteImport } from './routes/_app/notes/new'
 import { Route as AppProfileHistoryIndexRouteImport } from './routes/_app/profile/history/index'
 import { Route as ApiAuthFeishuLoginRouteImport } from './routes/api/auth/feishu/login'
 import { Route as ApiAuthFeishuJsapiRouteImport } from './routes/api/auth/feishu/jsapi'
 import { Route as ApiAuthFeishuCallbackRouteImport } from './routes/api/auth/feishu/callback'
 import { Route as AppProfileHistoryVersionRouteImport } from './routes/_app/profile/history/$version'
+import { Route as AppNotesIdEditRouteImport } from './routes/_app/notes/$id/edit'
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
@@ -44,6 +48,11 @@ const AppProfileRoute = AppProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNotesRoute = AppNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAppsRoute = AppAppsRouteImport.update({
   id: '/apps',
   path: '/apps',
@@ -53,6 +62,11 @@ const AppProfileIndexRoute = AppProfileIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AppProfileRoute,
+} as any)
+const AppNotesIndexRoute = AppNotesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppNotesRoute,
 } as any)
 const ApiTestResetDbRoute = ApiTestResetDbRouteImport.update({
   id: '/api/test/reset-db',
@@ -73,6 +87,11 @@ const AppProfileEditRoute = AppProfileEditRouteImport.update({
   id: '/edit',
   path: '/edit',
   getParentRoute: () => AppProfileRoute,
+} as any)
+const AppNotesNewRoute = AppNotesNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => AppNotesRoute,
 } as any)
 const AppProfileHistoryIndexRoute = AppProfileHistoryIndexRouteImport.update({
   id: '/history/',
@@ -100,17 +119,26 @@ const AppProfileHistoryVersionRoute =
     path: '/history/$version',
     getParentRoute: () => AppProfileRoute,
   } as any)
+const AppNotesIdEditRoute = AppNotesIdEditRouteImport.update({
+  id: '/$id/edit',
+  path: '/$id/edit',
+  getParentRoute: () => AppNotesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
   '/apps': typeof AppAppsRoute
+  '/notes': typeof AppNotesRouteWithChildren
   '/profile': typeof AppProfileRouteWithChildren
   '/settings': typeof AppSettingsRoute
+  '/notes/new': typeof AppNotesNewRoute
   '/profile/edit': typeof AppProfileEditRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/test/login': typeof ApiTestLoginRoute
   '/api/test/reset-db': typeof ApiTestResetDbRoute
+  '/notes/': typeof AppNotesIndexRoute
   '/profile/': typeof AppProfileIndexRoute
+  '/notes/$id/edit': typeof AppNotesIdEditRoute
   '/profile/history/$version': typeof AppProfileHistoryVersionRoute
   '/api/auth/feishu/callback': typeof ApiAuthFeishuCallbackRoute
   '/api/auth/feishu/jsapi': typeof ApiAuthFeishuJsapiRoute
@@ -121,11 +149,14 @@ export interface FileRoutesByTo {
   '/apps': typeof AppAppsRoute
   '/settings': typeof AppSettingsRoute
   '/': typeof AppIndexRoute
+  '/notes/new': typeof AppNotesNewRoute
   '/profile/edit': typeof AppProfileEditRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/test/login': typeof ApiTestLoginRoute
   '/api/test/reset-db': typeof ApiTestResetDbRoute
+  '/notes': typeof AppNotesIndexRoute
   '/profile': typeof AppProfileIndexRoute
+  '/notes/$id/edit': typeof AppNotesIdEditRoute
   '/profile/history/$version': typeof AppProfileHistoryVersionRoute
   '/api/auth/feishu/callback': typeof ApiAuthFeishuCallbackRoute
   '/api/auth/feishu/jsapi': typeof ApiAuthFeishuJsapiRoute
@@ -136,14 +167,18 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
   '/_app/apps': typeof AppAppsRoute
+  '/_app/notes': typeof AppNotesRouteWithChildren
   '/_app/profile': typeof AppProfileRouteWithChildren
   '/_app/settings': typeof AppSettingsRoute
   '/_app/': typeof AppIndexRoute
+  '/_app/notes/new': typeof AppNotesNewRoute
   '/_app/profile/edit': typeof AppProfileEditRoute
   '/api/auth/logout': typeof ApiAuthLogoutRoute
   '/api/test/login': typeof ApiTestLoginRoute
   '/api/test/reset-db': typeof ApiTestResetDbRoute
+  '/_app/notes/': typeof AppNotesIndexRoute
   '/_app/profile/': typeof AppProfileIndexRoute
+  '/_app/notes/$id/edit': typeof AppNotesIdEditRoute
   '/_app/profile/history/$version': typeof AppProfileHistoryVersionRoute
   '/api/auth/feishu/callback': typeof ApiAuthFeishuCallbackRoute
   '/api/auth/feishu/jsapi': typeof ApiAuthFeishuJsapiRoute
@@ -155,13 +190,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/apps'
+    | '/notes'
     | '/profile'
     | '/settings'
+    | '/notes/new'
     | '/profile/edit'
     | '/api/auth/logout'
     | '/api/test/login'
     | '/api/test/reset-db'
+    | '/notes/'
     | '/profile/'
+    | '/notes/$id/edit'
     | '/profile/history/$version'
     | '/api/auth/feishu/callback'
     | '/api/auth/feishu/jsapi'
@@ -172,11 +211,14 @@ export interface FileRouteTypes {
     | '/apps'
     | '/settings'
     | '/'
+    | '/notes/new'
     | '/profile/edit'
     | '/api/auth/logout'
     | '/api/test/login'
     | '/api/test/reset-db'
+    | '/notes'
     | '/profile'
+    | '/notes/$id/edit'
     | '/profile/history/$version'
     | '/api/auth/feishu/callback'
     | '/api/auth/feishu/jsapi'
@@ -186,14 +228,18 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_app'
     | '/_app/apps'
+    | '/_app/notes'
     | '/_app/profile'
     | '/_app/settings'
     | '/_app/'
+    | '/_app/notes/new'
     | '/_app/profile/edit'
     | '/api/auth/logout'
     | '/api/test/login'
     | '/api/test/reset-db'
+    | '/_app/notes/'
     | '/_app/profile/'
+    | '/_app/notes/$id/edit'
     | '/_app/profile/history/$version'
     | '/api/auth/feishu/callback'
     | '/api/auth/feishu/jsapi'
@@ -241,6 +287,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/notes': {
+      id: '/_app/notes'
+      path: '/notes'
+      fullPath: '/notes'
+      preLoaderRoute: typeof AppNotesRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/apps': {
       id: '/_app/apps'
       path: '/apps'
@@ -254,6 +307,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile/'
       preLoaderRoute: typeof AppProfileIndexRouteImport
       parentRoute: typeof AppProfileRoute
+    }
+    '/_app/notes/': {
+      id: '/_app/notes/'
+      path: '/'
+      fullPath: '/notes/'
+      preLoaderRoute: typeof AppNotesIndexRouteImport
+      parentRoute: typeof AppNotesRoute
     }
     '/api/test/reset-db': {
       id: '/api/test/reset-db'
@@ -282,6 +342,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/profile/edit'
       preLoaderRoute: typeof AppProfileEditRouteImport
       parentRoute: typeof AppProfileRoute
+    }
+    '/_app/notes/new': {
+      id: '/_app/notes/new'
+      path: '/new'
+      fullPath: '/notes/new'
+      preLoaderRoute: typeof AppNotesNewRouteImport
+      parentRoute: typeof AppNotesRoute
     }
     '/_app/profile/history/': {
       id: '/_app/profile/history/'
@@ -318,8 +385,31 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppProfileHistoryVersionRouteImport
       parentRoute: typeof AppProfileRoute
     }
+    '/_app/notes/$id/edit': {
+      id: '/_app/notes/$id/edit'
+      path: '/$id/edit'
+      fullPath: '/notes/$id/edit'
+      preLoaderRoute: typeof AppNotesIdEditRouteImport
+      parentRoute: typeof AppNotesRoute
+    }
   }
 }
+
+interface AppNotesRouteChildren {
+  AppNotesNewRoute: typeof AppNotesNewRoute
+  AppNotesIndexRoute: typeof AppNotesIndexRoute
+  AppNotesIdEditRoute: typeof AppNotesIdEditRoute
+}
+
+const AppNotesRouteChildren: AppNotesRouteChildren = {
+  AppNotesNewRoute: AppNotesNewRoute,
+  AppNotesIndexRoute: AppNotesIndexRoute,
+  AppNotesIdEditRoute: AppNotesIdEditRoute,
+}
+
+const AppNotesRouteWithChildren = AppNotesRoute._addFileChildren(
+  AppNotesRouteChildren,
+)
 
 interface AppProfileRouteChildren {
   AppProfileEditRoute: typeof AppProfileEditRoute
@@ -341,6 +431,7 @@ const AppProfileRouteWithChildren = AppProfileRoute._addFileChildren(
 
 interface AppRouteChildren {
   AppAppsRoute: typeof AppAppsRoute
+  AppNotesRoute: typeof AppNotesRouteWithChildren
   AppProfileRoute: typeof AppProfileRouteWithChildren
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
@@ -348,6 +439,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAppsRoute: AppAppsRoute,
+  AppNotesRoute: AppNotesRouteWithChildren,
   AppProfileRoute: AppProfileRouteWithChildren,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,

@@ -129,3 +129,12 @@ export function readSession(): SessionPayload | null {
 
   return session
 }
+
+export function requireOpenId(): string {
+  const session = readSession()
+  const openId = session?.user?.openId
+  if (!openId) {
+    throw new Error('未登录')
+  }
+  return openId
+}

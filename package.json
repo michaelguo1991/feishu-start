@@ -10,6 +10,7 @@
     "dev:e2e": "PORT=3011 vite dev --port 3011 --strictPort",
     "generate-routes": "tsr generate",
     "db:generate": "drizzle-kit generate",
+    "db:generate:sqlite": "drizzle-kit generate --schema ./src/db/schema.sqlite.ts --out ./drizzle-sqlite --dialect sqlite",
     "db:migrate": "node scripts/migrate.mjs",
     "db:studio": "drizzle-kit studio",
     "build": "vite build",

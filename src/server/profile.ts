@@ -4,7 +4,7 @@ import { z } from 'zod'
 
 import { getDb } from '#/db'
 import { profileVersions } from '#/db/schema'
-import { readSession } from '#/lib/session'
+import { requireOpenId } from '#/lib/session'
 
 const profileInputSchema = z.object({
   displayName: z.string().trim().min(1, '姓名不能为空').max(50),
@@ -17,12 +17,8 @@ const versionSchema = z.object({
   version: z.number().int().positive(),
 })
 
-function requireOpenId() {
-  const session = readSession()
-  const openId = session?.user?.openId
-  if (!openId) {
-    throw new Error('未登录')
-  }
+function requireProfileActor() {
+  const openId = requireOpenId()
   return { openId, createdBy: openId }
 }
 
@@ -80,7 +76,7 @@ async function insertProfileVersion(
 }
 
 export const getLatestProfile = createServerFn({ method: 'GET' }).handler(async () => {
-  const { openId } = requireOpenId()
+  const { openId } = requireProfileActor()
   const db = await getDb()
 
   const row = await db.query.profileVersions.findFirst({
@@ -92,7 +88,7 @@ export const getLatestProfile = createServerFn({ method: 'GET' }).handler(async 
 })
 
 export const listProfileVersions = createServerFn({ method: 'GET' }).handler(async () => {
-  const { openId } = requireOpenId()
+  const { openId } = requireProfileActor()
   const db = await getDb()
 
   const rows = await db.query.profileVersions.findMany({
@@ -112,7 +108,7 @@ export const listProfileVersions = createServerFn({ method: 'GET' }).handler(asy
 export const getProfileVersion = createServerFn({ method: 'GET' })
   .validator(versionSchema)
   .handler(async ({ data }) => {
-    const { openId } = requireOpenId()
+    const { openId } = requireProfileActor()
     const db = await getDb()
 
     const row = await db.query.profileVersions.findFirst({
@@ -132,14 +128,14 @@ export const getProfileVersion = createServerFn({ method: 'GET' })
 export const saveProfile = createServerFn({ method: 'POST' })
   .validator(profileInputSchema)
   .handler(async ({ data }) => {
-    const { openId, createdBy } = requireOpenId()
+    const { openId, createdBy } = requireProfileActor()
     return insertProfileVersion(openId, createdBy, data)
   })
 
 export const restoreProfileVersion = createServerFn({ method: 'POST' })
   .validator(versionSchema)
   .handler(async ({ data }) => {
-    const { openId, createdBy } = requireOpenId()
+    const { openId, createdBy } = requireProfileActor()
     const db = await getDb()
 
     const row = await db.query.profileVersions.findFirst({

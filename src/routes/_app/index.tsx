@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
-import { LayoutGrid, Settings, User } from 'lucide-react'
+import { LayoutGrid, NotebookText, Settings, User } from 'lucide-react'
 import { z } from 'zod'
 
 import { FeishuGuestAuth } from '#/components/FeishuGuestAuth'
@@ -33,6 +33,12 @@ const quickLinks = [
     label: '个人中心',
     desc: '查看飞书账号信息与登录状态',
     icon: User,
+  },
+  {
+    to: '/notes' as const,
+    label: '笔记',
+    desc: '创建与管理你的个人笔记',
+    icon: NotebookText,
   },
   {
     to: '/apps' as const,

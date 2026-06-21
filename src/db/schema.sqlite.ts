@@ -1,4 +1,10 @@
-import { integer, sqliteTable, text, uniqueIndex } from 'drizzle-orm/sqlite-core'
+import {
+  index,
+  integer,
+  sqliteTable,
+  text,
+  uniqueIndex,
+} from 'drizzle-orm/sqlite-core'
 
 export const profileVersions = sqliteTable(
   'profile_versions',
@@ -24,3 +30,19 @@ export const profileVersions = sqliteTable(
 
 export type ProfileVersion = typeof profileVersions.$inferSelect
 export type NewProfileVersion = typeof profileVersions.$inferInsert
+
+export const notes = sqliteTable(
+  'notes',
+  {
+    id: integer('id').primaryKey({ autoIncrement: true }),
+    feishuOpenId: text('feishu_open_id').notNull(),
+    title: text('title').notNull(),
+    content: text('content').notNull().default(''),
+    createdAt: text('created_at').notNull(),
+    updatedAt: text('updated_at').notNull(),
+  },
+  (table) => [index('notes_open_id_idx').on(table.feishuOpenId)],
+)
+
+export type Note = typeof notes.$inferSelect
+export type NewNote = typeof notes.$inferInsert
